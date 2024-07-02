@@ -1,18 +1,32 @@
 import { Hono } from 'hono'
 
-export const invoicesRoute = new Hono()
-  .get('/', (c) => {
-    return c.json({ invoices: 'Get invoices!' })
+import prisma from '../db/db'
+
+const invoicesRoute = new Hono()
+  .get('/', async (c) => {
+    const invoices = await prisma.invoice.findMany()
+    return c.json({ invoices, count: invoices.length })
   })
-  .post('/', (c) => {
+  .post('/', async (c) => {
     return c.json({ invoices: 'Create invoice!' })
   })
-  .get('/:id', (c) => {
-    return c.json({ invoices: `Get invoice ${c.req.param('id')}!` })
+  .get('/:id', async (c) => {
+    const invoice = await prisma.invoice.findUnique({
+      where: {
+        id: c.req.param('id'),
+      },
+    })
+    if (!invoice) {
+      c.status(404)
+      return c.json({ error: 'Invoice not found!' })
+    }
+    return c.json({ invoice })
   })
-  .put('/:id', (c) => {
+  .put('/:id', async (c) => {
     return c.json({ invoices: `Update invoice ${c.req.param('id')}!` })
   })
-  .delete('/:id', (c) => {
+  .delete('/:id', async (c) => {
     return c.json({ invoices: `Delete invoice ${c.req.param('id')}!` })
   })
+
+export default invoicesRoute
