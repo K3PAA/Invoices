@@ -1,5 +1,5 @@
-import Header from './components/Header'
-import Invoices from './components/invoices/App'
+import Header from "./components/Header";
+import Invoices from "./components/invoices/App";
 
 export default function App() {
   return (
@@ -7,5 +7,5 @@ export default function App() {
       <Invoices />
       <Header />
     </div>
-  )
+  );
 }
