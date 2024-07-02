@@ -18,7 +18,7 @@ export default function App() {
   }, [])
 
   return (
-    <main className='mt-12'>
+    <main className='my-12'>
       <Container>
         <Header />
         <ul className='flex flex-col gap-4 mt-16'>
