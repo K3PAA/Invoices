@@ -24,12 +24,19 @@ module.exports = {
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+        gray: {
+          200: 'hsl(var(--gray-200))',
+        },
+        success: 'hsl(var(--success))',
+        pending: 'hsl(var(--pending))',
         primary: {
           DEFAULT: 'hsl(var(--primary))',
+          light: 'hsl(var(--primary-light))',
           foreground: 'hsl(var(--primary-foreground))',
         },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
+          light: 'hsl(var(--secondary-light))',
           foreground: 'hsl(var(--secondary-foreground))',
         },
         destructive: {
