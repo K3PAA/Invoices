@@ -1,7 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { AiFillPlusCircle } from "react-icons/ai";
+import FilterDropdown from "./FilterDropdown";
 
-export default function Header() {
+type HeaderProps = {
+  count: number;
+};
+
+export default function Header({ count }: HeaderProps) {
   return (
     <header className="flex items-center justify-between">
       <section>
@@ -9,12 +14,15 @@ export default function Header() {
           Invoices
         </h1>
         <p className="text-sm tracking-wider text-gray-200">
-          <span className="hidden sm:block">There are 4 pending invoices</span>
-          <span className="sm:hidden">4 invoices</span>
+          <span className="hidden sm:block">
+            There are {count} total invoices
+          </span>
+          <span className="sm:hidden">{count} invoices</span>
         </p>
       </section>
 
       <section className="flex gap-x-4">
+        <FilterDropdown />
         <Button className="rounded-full py-6 font-bold">
           <AiFillPlusCircle className="mr-4 rounded-full text-3xl" />
           New <span className="ml-1 hidden sm:block"> Invoice</span>

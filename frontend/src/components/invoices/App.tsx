@@ -1,30 +1,45 @@
+import { useQuery } from "@tanstack/react-query";
 import Container from "../Container";
 import Header from "./Header";
 import Preview from "./Preview";
 
-import { useEffect, useState } from "react";
-import { Invoice } from "@prisma/client";
+import { sleep } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
+
+import { BASE_INVOICE_COUNT } from "@/lib/constants";
+
+import { api } from "@/lib/api";
+
+const getInvoices = async () => {
+  await sleep(2000);
+
+  const res = await api.invoices.$get();
+  if (!res.ok) throw new Error("Failed to fetch invoices");
+  const data = await res.json();
+
+  return data.invoices;
+};
 
 export default function App() {
-  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const invoices = useQuery({
+    queryKey: ["invoices"],
+    queryFn: getInvoices,
+  });
 
-  useEffect(() => {
-    const getInvoices = async () => {
-      const res = await fetch("/api/v1/invoices");
-      const data = await res.json();
-      setInvoices(data.invoices);
-    };
-    getInvoices();
-  }, []);
+  if (invoices.isError) return <div>Error: {invoices.error.message}</div>;
 
   return (
     <main className="my-12">
       <Container>
-        <Header />
+        <Header count={invoices.data?.length || BASE_INVOICE_COUNT} />
         <ul className="mt-16 flex flex-col gap-4">
-          {invoices?.map((invoice) => (
-            <Preview key={invoice.id} invoice={invoice} />
-          ))}
+          {invoices.isPending
+            ? Array.from({ length: BASE_INVOICE_COUNT }, (_, i) => (
+                <Skeleton key={i} className="h-20 w-full" />
+              ))
+            : invoices.data.map((invoice) => (
+                <Preview key={invoice.id} invoice={invoice} />
+              ))}
         </ul>
       </Container>
     </main>
